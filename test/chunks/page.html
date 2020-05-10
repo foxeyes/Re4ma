@@ -1,0 +1,13 @@
+<style>
+  .page {
+    display: grid;
+    grid-template-rows: min-content auto min-content;
+    grid-gap: 20px;
+    min-height: 100vh;
+  }
+</style>
+<div class="page">
+  <import-html src="./chunks/header.html" text="HEADER"></import-html>
+  <slot></slot>
+  <import-html src="./chunks/footer.html" text="FOOTER" color="rgb(113, 194, 133)"></import-html>
+</div>

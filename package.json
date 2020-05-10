@@ -1,0 +1,14 @@
+{
+  "name": "re4ma",
+  "version": "0.0.1",
+  "description": "static CMS",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "alex.sova@pm.me",
+  "license": "ISC",
+  "devDependencies": {
+    "marked": "^1.0.0"
+  }
+}
