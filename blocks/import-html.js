@@ -2,19 +2,14 @@ const IMPORTS_READY = 'imports-ready';
 
 let documentStyle = null;
 
-/**
- *
- * @param {String} string
- * @param {'SHA-1' | 'SHA-256' | 'SHA-384' | 'SHA-512'} [algorithm]
- *
- */
-export async function hashIt(string, algorithm='SHA-1') {
-  let encoder = new TextEncoder();
-  let resultArrBuff = await window.crypto.subtle.digest(algorithm, encoder.encode(string));
-  let hashArr = Array.from(new Uint8Array(resultArrBuff)).map((b) => {
-    return b.toString(16);
+function uid() {
+  let allSymbolsStr = '1234567890QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm';
+  let variety = allSymbolsStr + allSymbolsStr;
+  return 'XXXXXXXX'.replace(/[X]/g, () => {
+    let rnd = Math.floor( Math.random() * (variety.length - 1) );
+    let symbol = variety.substring(rnd, rnd + 1);
+    return symbol;
   });
-  return hashArr.join('');
 };
 
 export class ImportHtml extends HTMLElement {
@@ -29,8 +24,12 @@ export class ImportHtml extends HTMLElement {
   }
 
   set src(src) {
+
     let importHtml = async () => {
-      let prefix = (await hashIt(src)).substring(0, 6);
+      let srcid = uid();
+      let proptectClassName = (name) => {
+        return name + '_' + srcid;
+      };
       let html = await (await window.fetch(src)).text();
       [...this.attributes].forEach((attr) => {
         html = html.split(`--${attr.name}--`).join(attr.value);
@@ -44,7 +43,7 @@ export class ImportHtml extends HTMLElement {
       styledElArr.forEach((el) => {
         classList = [...classList, ...el.classList];
         [...el.classList].forEach((className) => {
-          el.classList.replace(className, '_' + prefix + '_' + className);
+          el.classList.replace(className, proptectClassName(className));
         });
       });
       let tplStyles = [...fr.querySelectorAll('style')];
@@ -58,7 +57,7 @@ export class ImportHtml extends HTMLElement {
         }
         tplStyles.forEach((tplStyle) => {
           classList.forEach((className) => {
-            tplStyle.innerHTML = tplStyle.innerHTML.replace(className, '_' + prefix + '_' + className);
+            tplStyle.innerHTML = tplStyle.innerHTML.replace(className, proptectClassName(className));
           });
           documentStyle.innerHTML += tplStyle.innerHTML;
           tplStyle.remove();

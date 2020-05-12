@@ -1,4 +1,5 @@
 # Re4ma - magic site generator based on import-blocks (Custom Elements) and Puppeteer
+## (Concept WIP)
 
 * Generates lightweight static HTML pages without JavaScript frameworks
 

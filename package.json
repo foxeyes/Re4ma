@@ -4,11 +4,13 @@
   "description": "static CMS",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "build": "node --experimental-modules builder/builder.mjs"
   },
   "author": "alex.sova@pm.me",
   "license": "ISC",
   "devDependencies": {
-    "marked": "^1.0.0"
+    "marked": "^1.0.0",
+    "puppeteer": "^3.0.4"
   }
 }
