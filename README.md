@@ -6,19 +6,19 @@
 ### Usage:
 ```html
 <!-- Import HTML block: -->
-<import-html src="html/page.html"><import-html>
+<re-html src="html/page.html"><re-html>
 
 <!-- Import Markdown block: -->
-<import-md src="md/article.md"><import-md>
+<re-md src="md/article.md"><re-md>
 
 <!-- Import Javascript: -->
-<import-script src="js/app.js"><import-script>
+<re-script src="js/app.js"><re-script>
 ```
 ### Named Slots:
 ```html
-<import-html src="html/page.html">
+<re-html src="html/page.html">
   <div slot="content"></div>
-<import-html>
+<re-html>
 ```
 In HTML Chunk:
 ```html
@@ -34,7 +34,7 @@ In HTML Chunk:
 ### Placeholders:
 Define HTML attributes:
 ```html
-<import-html src="html/page.html" text="My Text" color="#f00"><import-html>
+<re-html src="html/page.html" text="My Text" color="#f00"><re-html>
 ```
 Then use them in templates:
 ```html

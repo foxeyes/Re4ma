@@ -5,11 +5,12 @@
   "main": "index.js",
   "scripts": {
     "test": "test",
-    "build": "node --experimental-modules builder/builder.mjs"
+    "build": "node --experimental-modules builder.mjs"
   },
   "author": "alex.sova@pm.me",
   "license": "ISC",
   "devDependencies": {
+    "localhost": "^0.3.0",
     "marked": "^1.0.0",
     "puppeteer": "^3.0.4"
   }

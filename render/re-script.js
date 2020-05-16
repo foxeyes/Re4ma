@@ -1,4 +1,4 @@
-export class ImportScript extends HTMLElement {
+export class ReScript extends HTMLElement {
   set src(src) {
     let script = document.createElement('script');
     script.src = src;
@@ -16,5 +16,5 @@ export class ImportScript extends HTMLElement {
     this[name] = newVal;
   }
 }
-ImportScript.observedAttributes = ['src', 'module'];
-window.customElements.define('import-script', ImportScript);
+ReScript.observedAttributes = ['src', 'module'];
+window.customElements.define('re-script', ReScript);

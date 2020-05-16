@@ -6,11 +6,10 @@
   <title>Re4ma Test</title>
 </head>
 <body>
-  <import-html src="./styles/css.html"></import-html>
-  <import-html src="./chunks/page.html" prop="My Prop">
-    <import-md src="./md/test.md"></import-md>
-  </import-html>
-  <script src="../blocks/imports.js" type="module"></script>
-  <script>document.body.appendChild(document.createElement('i'))</script>
+  <re-html src="styles/css.html"></re-html>
+  <re-html src="chunks/page.html" prop="My Prop">
+    <re-md src="md/test.md"></re-md>
+  </re-html>
+  <script src="../render/render.js" type="module" remove></script>
 </body>
 </html>

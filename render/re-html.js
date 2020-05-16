@@ -12,11 +12,11 @@ function uid() {
   });
 };
 
-export class ImportHtml extends HTMLElement {
+export class ReHtml extends HTMLElement {
 
   constructor() {
     super();
-    ImportHtml.instances.push(this);
+    ReHtml.instances.push(this);
   }
 
   _processFr(fr) {
@@ -85,8 +85,8 @@ export class ImportHtml extends HTMLElement {
       }
       this.parentElement.insertBefore(this._processFr(fr), this);
       this.remove();
-      ImportHtml.propcessed.push(this);
-      if (ImportHtml.instances.length === ImportHtml.propcessed.length) {
+      ReHtml.propcessed.push(this);
+      if (ReHtml.instances.length === ReHtml.propcessed.length) {
         window.dispatchEvent(new CustomEvent(IMPORTS_READY));
       }
     }
@@ -101,7 +101,7 @@ export class ImportHtml extends HTMLElement {
   }
 
 }
-ImportHtml.observedAttributes = ['src'];
-ImportHtml.instances = [];
-ImportHtml.propcessed = [];
-window.customElements.define('import-html', ImportHtml);
+ReHtml.observedAttributes = ['src'];
+ReHtml.instances = [];
+ReHtml.propcessed = [];
+window.customElements.define('re-html', ReHtml);

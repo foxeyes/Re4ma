@@ -1,13 +1,13 @@
 import marked from '../node_modules/marked/lib/marked.esm.js';
 
-export class ImportMd extends HTMLElement {
+export class ReMd extends HTMLElement {
 
   set src(src) {
-    let importMd = async () => {
+    let ReMd = async () => {
       let md = await (await window.fetch(src)).text();
       this.outerHTML = marked(md);
     };
-    importMd();
+    ReMd();
   }
 
   attributeChangedCallback(name, oldVal, newVal) {
@@ -18,5 +18,5 @@ export class ImportMd extends HTMLElement {
   }
 
 }
-ImportMd.observedAttributes = ['src'];
-window.customElements.define('import-md', ImportMd);
+ReMd.observedAttributes = ['src'];
+window.customElements.define('re-md', ReMd);
