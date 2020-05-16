@@ -27,8 +27,8 @@ class Cfg {
    */
   constructor(src = {}) {
     this.port = src.port || 3000;
-    this.sourceFolder = src.sourceFolder || './html';
-    this.outputFolder = src.outputFolder || './dist';
+    this.sourceFolder = src.sourceFolder || 'html';
+    this.outputFolder = src.outputFolder || 'dist';
     this.minify = src.minify !== undefined ? src.minify : true;
     this.files = src.files || [
       'index.html',
