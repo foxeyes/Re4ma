@@ -1,4 +1,4 @@
-# Re4ma - magic site generator based on HTML-blocks and Puppeteer
+# Re4ma - magic site generator based on smart HTML-blocks
 ## (Concept WIP)
 
 * Generates lightweight static HTML pages without JavaScript frameworks
