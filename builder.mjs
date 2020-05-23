@@ -68,7 +68,9 @@ async function build() {
   await page.setBypassCSP(true);
 
   for (let renderDesc of cfg.renderItems) {
-    let files = fs.readdirSync(__dirname + '/' + renderDesc.source);
+    let srcPath = __dirname + '/' + renderDesc.source;
+    let outPath = __dirname + '/' + renderDesc.output;
+    let files = fs.readdirSync(srcPath);
     for (let i = 0; i < files.length; i++) {
       let fileName = files[i];
       let skip = renderDesc.exclude && fileName.includes(fileName);
@@ -86,13 +88,13 @@ async function build() {
         if (cfg.minify) {
           html = min(html);
         }
-        console.log(`Ready: ${fileName}`);
-        if (!fs.existsSync(__dirname + '/' + renderDesc.output)) {
-          fs.mkdirSync(__dirname + '/' + renderDesc.output, {
+        console.log(`Ready: ${outPath}/${fileName}`);
+        if (!fs.existsSync(outPath)) {
+          fs.mkdirSync(outPath, {
             recursive: true,
           });
         }
-        fs.writeFileSync(__dirname + `/${renderDesc.output}/${fileName}`, html);
+        fs.writeFileSync(outPath + `/${fileName}`, html);
       }
     }
   }
