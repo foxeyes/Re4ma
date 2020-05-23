@@ -41,7 +41,7 @@ class Cfg {
 let cfg = new Cfg(JSON.parse(fs.readFileSync(cfgPath, 'utf8').toString()));
 console.log(cfg);
 
-localhost(__dirname + '/').listen(3000);
+localhost(__dirname + '/').listen(cfg.port);
 
 function min(html) {
   while (html.includes('\n')) {
