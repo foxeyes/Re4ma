@@ -5,18 +5,18 @@ let documentStyle = null;
 function uid() {
   let allSymbolsStr = '1234567890QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm';
   let variety = allSymbolsStr + allSymbolsStr;
-  return 'XXXXXXXX'.replace(/[X]/g, () => {
+  return 'XXXXXX'.replace(/[X]/g, () => {
     let rnd = Math.floor( Math.random() * (variety.length - 1) );
     let symbol = variety.substring(rnd, rnd + 1);
     return symbol;
   });
 };
 
-export class ReHtml extends HTMLElement {
+export class ReHtm extends HTMLElement {
 
   constructor() {
     super();
-    ReHtml.instances.push(this);
+    ReHtm.instances.push(this);
   }
 
   _processFr(fr) {
@@ -57,7 +57,12 @@ export class ReHtml extends HTMLElement {
         }
         tplStyles.forEach((tplStyle) => {
           classList.forEach((className) => {
-            tplStyle.innerHTML = tplStyle.innerHTML.replace(className, proptectClassName(className));
+            let safeName = proptectClassName(className);
+            tplStyle.innerHTML = tplStyle.innerHTML
+              .split(className + ' ').join(safeName + ' ')
+              .split(className + ':').join(safeName + ':')
+              .split(className + '{').join(safeName + '{')
+              .split(className + '[').join(safeName + '[');
           });
           documentStyle.innerHTML += tplStyle.innerHTML;
           tplStyle.remove();
@@ -85,8 +90,8 @@ export class ReHtml extends HTMLElement {
       }
       this.parentElement.insertBefore(this._processFr(fr), this);
       this.remove();
-      ReHtml.propcessed.push(this);
-      if (ReHtml.instances.length === ReHtml.propcessed.length) {
+      ReHtm.propcessed.push(this);
+      if (ReHtm.instances.length === ReHtm.propcessed.length) {
         window.dispatchEvent(new CustomEvent(IMPORTS_READY));
       }
     }
@@ -101,7 +106,7 @@ export class ReHtml extends HTMLElement {
   }
 
 }
-ReHtml.observedAttributes = ['src'];
-ReHtml.instances = [];
-ReHtml.propcessed = [];
-window.customElements.define('re-html', ReHtml);
+ReHtm.observedAttributes = ['src'];
+ReHtm.instances = [];
+ReHtm.propcessed = [];
+window.customElements.define('re-htm', ReHtm);

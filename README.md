@@ -6,7 +6,7 @@
 ### Usage:
 ```html
 <!-- Import HTML block: -->
-<re-html src="html/page.html"><re-html>
+<re-htm src="html/page.htm"><re-htm>
 
 <!-- Import Markdown block: -->
 <re-md src="md/article.md"><re-md>
@@ -14,11 +14,12 @@
 <!-- Import Javascript: -->
 <re-script src="js/app.js"><re-script>
 ```
+Use *.html file names for entry points and *.htm for chunks
 ### Named Slots:
 ```html
-<re-html src="html/page.html">
+<re-htm src="html/page.htm">
   <div slot="content"></div>
-<re-html>
+<re-htm>
 ```
 In HTML Chunk:
 ```html
@@ -34,7 +35,7 @@ In HTML Chunk:
 ### Placeholders:
 Define HTML attributes:
 ```html
-<re-html src="html/page.html" text="My Text" color="#f00"><re-html>
+<re-htm src="html/page.htm" text="My Text" color="#f00"><re-htm>
 ```
 Then use them in templates:
 ```html
@@ -48,5 +49,18 @@ Then use them in templates:
 ```
 ## Build Site
 ```
-npm run build
+node --experimental-modules builder.mjs <path>/builder.mjs
+```
+## Configuration file (re4ma.cfg.json)
+```json
+{
+  "port": 3000,
+  "renderItems": [
+    {
+      "source": "test",
+      "output": "dist"
+    }
+  ],
+  "minify": true
+}
 ```

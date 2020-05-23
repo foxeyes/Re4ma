@@ -15,24 +15,26 @@ if (!fs.existsSync(cfgPath)) {
   process.exit();
 }
 
+/**
+ * @typedef RenderEntry
+ * @property {String} source
+ * @property {String} output
+ * @property {Array<String>} [flags]
+ * @property {Array<String>} [exclude]
+ */
+
 class Cfg {
   /**
    *
    * @param {Object} [src]
    * @param {Number} [src.port]
-   * @param {String} [src.sourceFolder]
-   * @param {String} [src.outputFolder]
+   * @param {Array<RenderEntry>} src.renderItems
    * @param {Boolean} [src.minify]
-   * @param {Array<String>} [src.files]
    */
-  constructor(src = {}) {
+  constructor(src) {
     this.port = src.port || 3000;
-    this.sourceFolder = src.sourceFolder || 'html';
-    this.outputFolder = src.outputFolder || 'dist';
+    this.renderItems = src.renderItems || [];
     this.minify = src.minify !== undefined ? src.minify : true;
-    this.files = src.files || [
-      'index.html',
-    ];
   }
 }
 
@@ -65,25 +67,30 @@ async function build() {
   let page = await browser.newPage();
   await page.setBypassCSP(true);
 
-  for (let fileName of cfg.files) {
-    await page.goto(`http://localhost:${cfg.port}/${cfg.sourceFolder}/${fileName}`, {
-      waitUntil: 'networkidle0',
-    });
-
-    let html = await page.evaluate(() => {
-      let sriptToRemove = document.querySelector('script[remove]');
-      if (sriptToRemove) {
-        sriptToRemove.remove();
+  for (let renderDesc of cfg.renderItems) {
+    let files = fs.readdirSync(renderDesc.source);
+    for (let i = 0; i < files.length; i++) {
+      let fileName = files[i];
+      let skip = renderDesc.exclude && fileName.includes(fileName);
+      if (!skip && (fileName.includes('.html') || fileName.includes('.HTML'))) {
+        await page.goto(`http://localhost:${cfg.port}/${renderDesc.source}/${fileName}`, {
+          waitUntil: 'networkidle0',
+        });
+        let html = await page.evaluate(() => {
+          let elToRemoveArr = [...document.querySelectorAll('[re-move]')];
+          elToRemoveArr.forEach((el) => {
+            el.remove();
+          });
+          return document.documentElement.outerHTML;
+        });
+        if (cfg.minify) {
+          html = min(html);
+        }
+        console.log(`Ready: ${fileName}`);
+        fs.writeFileSync(`./${renderDesc.output}/${fileName}`, html);
       }
-      return document.documentElement.outerHTML;
-    });
-    if (cfg.minify) {
-      html = min(html);
     }
-    console.log(html);
-    fs.writeFileSync(`./${cfg.outputFolder}/${fileName}`, html);
   }
-
   process.exit();
 }
 
