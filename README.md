@@ -49,7 +49,7 @@ Then use them in templates:
 ```
 ## Build Site
 ```
-node --experimental-modules builder.mjs <path>/builder.mjs
+node --experimental-modules <path>/builder.mjs
 ```
 ## Configuration file (re4ma.cfg.json)
 ```json
