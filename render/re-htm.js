@@ -59,10 +59,10 @@ export class ReHtm extends HTMLElement {
           classList.forEach((className) => {
             let safeName = proptectClassName(className);
             tplStyle.innerHTML = tplStyle.innerHTML
-              .split(className + ' ').join(safeName + ' ')
-              .split(className + ':').join(safeName + ':')
-              .split(className + '{').join(safeName + '{')
-              .split(className + '[').join(safeName + '[');
+              .split('.' + className + ' ').join('.' + safeName + ' ')
+              .split('.' + className + ':').join('.' + safeName + ':')
+              .split('.' + className + '{').join('.' + safeName + '{')
+              .split('.' + className + '[').join('.' + safeName + '[');
           });
           documentStyle.innerHTML += tplStyle.innerHTML;
           tplStyle.remove();
