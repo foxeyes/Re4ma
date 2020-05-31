@@ -57,12 +57,12 @@ export class ReHtm extends HTMLElement {
         }
         tplStyles.forEach((tplStyle) => {
           classList.forEach((className) => {
-            let safeName = proptectClassName(className);
-            tplStyle.innerHTML = tplStyle.innerHTML
-              .split('.' + className + ' ').join('.' + safeName + ' ')
-              .split('.' + className + ':').join('.' + safeName + ':')
-              .split('.' + className + '{').join('.' + safeName + '{')
-              .split('.' + className + '[').join('.' + safeName + '[');
+            let from = '.' + className;
+            let to = '.' + proptectClassName(className);
+            let cases = [' ', ':', '{', '['];
+            cases.forEach((cStr) => {
+              tplStyle.innerHTML = tplStyle.innerHTML.split(from + cStr).join(to + cStr);
+            });
           });
           documentStyle.innerHTML += tplStyle.innerHTML;
           tplStyle.remove();
