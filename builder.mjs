@@ -19,6 +19,7 @@ if (!fs.existsSync(cfgPath)) {
  * @typedef RenderEntry
  * @property {String} source
  * @property {String} output
+ * @property {Boolean} [scanLinks]
  * @property {Array<String>} [flags]
  * @property {Array<String>} [exclude]
  */
@@ -67,37 +68,56 @@ async function build() {
   let page = await browser.newPage();
   await page.setBypassCSP(true);
 
-  for (let renderDesc of cfg.renderItems) {
-    let srcPath = __dirname + '/' + renderDesc.source;
-    let outPath = __dirname + '/' + renderDesc.output;
-    let files = fs.readdirSync(srcPath);
-    for (let i = 0; i < files.length; i++) {
-      let fileName = files[i];
-      let skip = renderDesc.exclude && fileName.includes(fileName);
-      if (!skip && (fileName.includes('.html') || fileName.includes('.HTML'))) {
-        await page.goto(`http://localhost:${cfg.port}/${renderDesc.source}/${fileName}`, {
-          waitUntil: 'networkidle0',
-        });
-        let html = await page.evaluate(() => {
-          let elToRemoveArr = [...document.querySelectorAll('[re-move]')];
-          elToRemoveArr.forEach((el) => {
-            el.remove();
+  let allEntries = new Set();
+
+  let scan = async (renderItems) => {
+    for (let renderDesc of renderItems) {
+      let srcPath = __dirname + '/' + renderDesc.source;
+      let outPath = __dirname + '/' + renderDesc.output;
+      let files = fs.readdirSync(srcPath);
+      for (let i = 0; i < files.length; i++) {
+        let fileName = files[i];
+        let skip = renderDesc.exclude && fileName.includes(fileName);
+        if (!skip && (fileName.includes('.html') || fileName.includes('.HTML'))) {
+          await page.goto(`http://localhost:${cfg.port}/${renderDesc.source + fileName}`, {
+            waitUntil: 'networkidle0',
           });
-          return document.documentElement.outerHTML;
-        });
-        if (cfg.minify) {
-          html = min(html);
-        }
-        console.log(`Ready: ${outPath}/${fileName}`);
-        if (!fs.existsSync(outPath)) {
-          fs.mkdirSync(outPath, {
-            recursive: true,
+          await page.evaluate(() => {
+            let elToRemoveArr = [...document.querySelectorAll('[re-move]')];
+            elToRemoveArr.forEach((el) => {
+              el.remove();
+            });
           });
+          if (renderDesc.scanLinks) {
+            let links = await page.evaluate(() => {
+              return [...document.querySelectorAll('a')].map((a) => {
+                return a.getAttribute('href');
+              });
+            });
+            allEntries = new Set([...allEntries, ...links]);
+          }
+          let html = await page.evaluate(() => {
+            return document.documentElement.outerHTML;
+          });
+          if (cfg.minify) {
+            html = min(html);
+          }
+          console.log(`Ready: ${outPath + fileName}`);
+          if (!fs.existsSync(outPath)) {
+            fs.mkdirSync(outPath, {
+              recursive: true,
+            });
+          }
+          fs.writeFileSync(outPath + fileName, html);
         }
-        fs.writeFileSync(outPath + `/${fileName}`, html);
       }
     }
-  }
+  };
+
+  await scan(cfg.renderItems);
+
+  console.log([...allEntries]);
+
   process.exit();
 }
 
