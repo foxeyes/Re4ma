@@ -82,10 +82,17 @@ async function build() {
           await page.goto(`http://localhost:${cfg.port}/${renderDesc.source + fileName}`, {
             waitUntil: 'networkidle0',
           });
+          await page.waitFor('200');
           await page.evaluate(() => {
             let elToRemoveArr = [...document.querySelectorAll('[re-move]')];
             elToRemoveArr.forEach((el) => {
               el.remove();
+            });
+            let elToClearArr = [...document.querySelectorAll('[re-clear]')];
+            elToClearArr.forEach((el) => {
+              el.textContent = '';
+              el.removeAttribute('style');
+              el.removeAttribute('re-clear');
             });
           });
           if (renderDesc.scanLinks) {
