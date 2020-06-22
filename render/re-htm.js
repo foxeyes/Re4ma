@@ -2,6 +2,8 @@ const IMPORTS_READY = 'imports-ready';
 
 let documentStyle = null;
 
+const CACHE = Object.create(null);
+
 function uid() {
   let allSymbolsStr = '1234567890QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm';
   let variety = allSymbolsStr + allSymbolsStr;
@@ -30,7 +32,10 @@ export class ReHtm extends HTMLElement {
       let proptectClassName = (name) => {
         return name + '_' + srcid;
       };
-      let html = await (await window.fetch(src)).text();
+      let html = CACHE[src] || await (await window.fetch(src)).text();
+      if (!CACHE[src]) {
+        CACHE[src] = html;
+      };
       [...this.attributes].forEach((attr) => {
         html = html.split(`--${attr.name}--`).join(attr.value);
       });
