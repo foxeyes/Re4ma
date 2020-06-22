@@ -82,7 +82,7 @@ async function build() {
           await page.goto(`http://localhost:${cfg.port}/${renderDesc.source + fileName}`, {
             waitUntil: 'networkidle0',
           });
-          await page.waitFor('200');
+          await page.waitFor(200);
           await page.evaluate(() => {
             let elToRemoveArr = [...document.querySelectorAll('[re-move]')];
             elToRemoveArr.forEach((el) => {
