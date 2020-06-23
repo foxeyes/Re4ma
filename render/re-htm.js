@@ -4,39 +4,15 @@ let documentStyle = null;
 
 const CACHE = Object.create(null);
 
-// function uid() {
-//   let allSymbolsStr = '1234567890QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm';
-//   let variety = allSymbolsStr + allSymbolsStr;
-//   return 'XXXXXX'.replace(/[X]/g, () => {
-//     let rnd = Math.floor( Math.random() * (variety.length - 1) );
-//     let symbol = variety.substring(rnd, rnd + 1);
-//     return symbol;
-//   });
-// };
-
-/**
- *
- * @return {number}
- */
-// @ts-ignore
-String.prototype.hashCode = function() {
-  if (Array.prototype.reduce){
-    return this.split('').reduce((a, b) => {
-      a = ((a << 5) - a) + b.charCodeAt(0);
-      return a & a;
-    }, 0);
-  }
-  let hash = 0;
-  if (this.length === 0) {
-    return hash;
-  }
-  for (let i = 0; i < this.length; i++) {
-    let char  = this.charCodeAt(i);
-    hash  = ((hash << 5) - hash) + char;
-    hash = hash & hash; // Convert to 32bit integer
-  }
-  return hash;
-}
+function uid() {
+  let allSymbolsStr = '1234567890QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm';
+  let variety = allSymbolsStr + allSymbolsStr;
+  return 'XXXXXX'.replace(/[X]/g, () => {
+    let rnd = Math.floor( Math.random() * (variety.length - 1) );
+    let symbol = variety.substring(rnd, rnd + 1);
+    return symbol;
+  });
+};
 
 export class ReHtm extends HTMLElement {
 
@@ -49,17 +25,30 @@ export class ReHtm extends HTMLElement {
     return fr;
   }
 
+  /**
+   * @param {String} src
+   */
   set src(src) {
 
     let importHtml = async () => {
-      let srcid = src.hashCode();
-      let proptectClassName = (name) => {
-        return name + '_' + srcid;
-      };
-      let html = CACHE[src] || await (await window.fetch(src)).text();
       if (!CACHE[src]) {
-        CACHE[src] = html;
+        CACHE[src] = {
+          uid: null,
+          html: null,
+          new: true,
+        }
+      }
+      let cached = CACHE[src];
+      if (!cached.uid) {
+        cached.uid = uid();
+      }
+      let proptectClassName = (name) => {
+        return name + '_' + cached.uid;
       };
+      if (!cached.html) {
+        cached.html = await (await window.fetch(src)).text();
+      };
+      let html = cached.html;
       [...this.attributes].forEach((attr) => {
         html = html.split(`--${attr.name}--`).join(attr.value);
       });
@@ -76,7 +65,8 @@ export class ReHtm extends HTMLElement {
         });
       });
       let tplStyles = [...fr.querySelectorAll('style')];
-      if (tplStyles.length) {
+
+      if (tplStyles.length && cached.new) {
         if (!documentStyle) {
           documentStyle = document.querySelector('style');
         }
@@ -96,7 +86,9 @@ export class ReHtm extends HTMLElement {
           documentStyle.innerHTML += tplStyle.innerHTML;
           tplStyle.remove();
         });
+        cached.new = false;
       }
+
       let defaultSlot = fr.querySelector(`slot:not([name])`);
       let slot;
       [...this.children].forEach((el) => {
