@@ -4,15 +4,39 @@ let documentStyle = null;
 
 const CACHE = Object.create(null);
 
-function uid() {
-  let allSymbolsStr = '1234567890QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm';
-  let variety = allSymbolsStr + allSymbolsStr;
-  return 'XXXXXX'.replace(/[X]/g, () => {
-    let rnd = Math.floor( Math.random() * (variety.length - 1) );
-    let symbol = variety.substring(rnd, rnd + 1);
-    return symbol;
-  });
-};
+// function uid() {
+//   let allSymbolsStr = '1234567890QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm';
+//   let variety = allSymbolsStr + allSymbolsStr;
+//   return 'XXXXXX'.replace(/[X]/g, () => {
+//     let rnd = Math.floor( Math.random() * (variety.length - 1) );
+//     let symbol = variety.substring(rnd, rnd + 1);
+//     return symbol;
+//   });
+// };
+
+/**
+ *
+ * @return {number}
+ */
+// @ts-ignore
+String.prototype.hashCode = function() {
+  if (Array.prototype.reduce){
+    return this.split('').reduce((a, b) => {
+      a = ((a << 5) - a) + b.charCodeAt(0);
+      return a & a;
+    }, 0);
+  }
+  let hash = 0;
+  if (this.length === 0) {
+    return hash;
+  }
+  for (let i = 0; i < this.length; i++) {
+    let char  = this.charCodeAt(i);
+    hash  = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32bit integer
+  }
+  return hash;
+}
 
 export class ReHtm extends HTMLElement {
 
@@ -28,7 +52,7 @@ export class ReHtm extends HTMLElement {
   set src(src) {
 
     let importHtml = async () => {
-      let srcid = uid();
+      let srcid = src.hashCode();
       let proptectClassName = (name) => {
         return name + '_' + srcid;
       };
