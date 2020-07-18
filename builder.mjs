@@ -1,7 +1,7 @@
 import puppeteer from 'puppeteer';
 import fs from 'fs';
 import path from 'path';
-import localhost from 'localhost';
+import liveServer from 'live-server';
 
 let __dirname = path.resolve(path.dirname(''));
 console.log('Current path: ' + __dirname);
@@ -42,7 +42,12 @@ class Cfg {
 let cfg = new Cfg(JSON.parse(fs.readFileSync(cfgPath, 'utf8').toString()));
 console.log(cfg);
 
-localhost(__dirname + '/').listen(cfg.port);
+liveServer.start({
+  port: cfg.port,
+  root: __dirname + '/', // Set root directory that's being served. Defaults to cwd.
+  ignore: '.', // ignore files for detect changes (. - means all ignore)
+  open: false, // When false, it won't load your browser by default.
+});
 
 function min(html) {
   while (html.includes('\n')) {
@@ -128,4 +133,6 @@ async function build() {
   process.exit();
 }
 
-build();
+build().then(() => {
+  liveServer.shutdown();
+});
