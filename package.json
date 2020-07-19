@@ -10,7 +10,7 @@
   "author": "alex.sova@pm.me",
   "license": "ISC",
   "devDependencies": {
-    "localhost": "^0.3.0",
+    "live-server": "^1.2.1",
     "marked": "^1.0.0",
     "puppeteer": "^3.0.4"
   }
