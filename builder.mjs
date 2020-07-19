@@ -109,6 +109,13 @@ async function build() {
             allEntries = new Set([...allEntries, ...links]);
           }
           let html = await page.evaluate(() => {
+            for (const scriptElement of document.getElementsByTagName('script')) {
+              // live-server script deleting
+              if (scriptElement.innerHTML.indexOf('Live reload enabled') !== -1) {
+                scriptElement.parentNode.removeChild(scriptElement);
+              }
+            }
+
             return document.documentElement.outerHTML;
           });
           if (cfg.minify) {
