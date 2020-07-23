@@ -47,6 +47,16 @@ Then use them in templates:
 </style>
 <div class="container">--text--</div>
 ```
+## Build stage helper attributes
+Clear element content (remove children):
+```html
+<my-component re-clear><my-component>
+```
+
+Remove cetrain element:
+```html
+<my-component re-move><my-component>
+```
 ## Build Site
 ```
 node --experimental-modules <path>/builder.mjs
