@@ -56,7 +56,17 @@ export class ReHtm extends HTMLElement {
       tpl.innerHTML = html;
       let fr = document.createDocumentFragment();
       fr.appendChild(tpl.content);
+      let head = fr.querySelector('re-head');
+      console.log(head);
+      if (head) {
+        [...head.children].forEach((node) => {
+          console.log(node)
+          document.head.appendChild(node);
+        });
+        head.remove();
+      }
       let classList = [];
+      // TODO: use re-class
       let styledElArr = [...fr.querySelectorAll('[class]')];
       styledElArr.forEach((el) => {
         classList = [...classList, ...el.classList];
@@ -103,18 +113,16 @@ export class ReHtm extends HTMLElement {
         }
         if (slot) {
           slot.parentElement.insertBefore(el, slot);
+          slot.remove();
+          slot = null;
         } else {
           el.remove();
         }
       });
-      if (slot) {
-        // @ts-ignore
-        slot.remove();
-      }
       this.parentElement.insertBefore(this._processFr(fr), this);
       this.remove();
-      ReHtm.propcessed.push(this);
-      if (ReHtm.instances.length === ReHtm.propcessed.length) {
+      ReHtm.processed.push(this);
+      if (ReHtm.instances.length === ReHtm.processed.length) {
         window.dispatchEvent(new CustomEvent(IMPORTS_READY));
       }
     }
@@ -131,5 +139,5 @@ export class ReHtm extends HTMLElement {
 }
 ReHtm.observedAttributes = ['src'];
 ReHtm.instances = [];
-ReHtm.propcessed = [];
+ReHtm.processed = [];
 window.customElements.define('re-htm', ReHtm);

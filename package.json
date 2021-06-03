@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "static CMS",
   "main": "index.js",
+  "type": "module",
   "scripts": {
     "test": "test",
     "build": "node --experimental-modules builder.mjs"
