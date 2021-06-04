@@ -57,7 +57,6 @@ export class ReHtm extends HTMLElement {
       let fr = document.createDocumentFragment();
       fr.appendChild(tpl.content);
       let head = fr.querySelector('re-head');
-      console.log(head);
       if (head) {
         [...head.children].forEach((node) => {
           console.log(node)
@@ -112,12 +111,14 @@ export class ReHtm extends HTMLElement {
           slot = defaultSlot || null;
         }
         if (slot) {
-          slot.parentElement.insertBefore(el, slot);
-          slot.remove();
-          slot = null;
+          console.log(el)
+          slot.parentElement?.insertBefore(el, slot);
         } else {
           el.remove();
         }
+      });
+      [...fr.querySelectorAll('slot')].forEach((slot) => {
+        slot.remove();
       });
       this.parentElement.insertBefore(this._processFr(fr), this);
       this.remove();
