@@ -111,7 +111,6 @@ export class ReHtm extends HTMLElement {
           slot = defaultSlot || null;
         }
         if (slot) {
-          console.log(el)
           slot.parentElement?.insertBefore(el, slot);
         } else {
           el.remove();
