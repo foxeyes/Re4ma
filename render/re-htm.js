@@ -1,6 +1,6 @@
 const IMPORTS_READY = 'imports-ready';
 
-let documentStyle = null;
+// let documentStyle = null;
 
 const CACHE = Object.create(null);
 
@@ -42,9 +42,9 @@ export class ReHtm extends HTMLElement {
       if (!cached.uid) {
         cached.uid = uid();
       }
-      let proptectClassName = (name) => {
-        return name + '_' + cached.uid;
-      };
+      // let proptectClassName = (name) => {
+      //   return name + '_' + cached.uid;
+      // };
       if (!cached.html) {
         cached.html = await (await window.fetch(src)).text();
       };
@@ -64,41 +64,41 @@ export class ReHtm extends HTMLElement {
         });
         head.remove();
       }
-      let classList = [];
+      // let classList = [];
       // TODO: use re-class
-      let styledElArr = [...fr.querySelectorAll('[class]')];
-      styledElArr.forEach((el) => {
-        classList = [...classList, ...el.classList];
-        [...el.classList].forEach((className) => {
-          el.classList.replace(className, proptectClassName(className));
-        });
-      });
-      let tplStyles = [...fr.querySelectorAll('style')];
+      // let styledElArr = [...fr.querySelectorAll('[class]')];
+      // styledElArr.forEach((el) => {
+      //   classList = [...classList, ...el.classList];
+      //   [...el.classList].forEach((className) => {
+      //     el.classList.replace(className, proptectClassName(className));
+      //   });
+      // });
+      // let tplStyles = [...fr.querySelectorAll('style')];
 
-      if (tplStyles.length) {
-        if (!documentStyle) {
-          documentStyle = document.querySelector('style');
-        }
-        if (!documentStyle) {
-          documentStyle = document.createElement('style');
-          document.head.appendChild(documentStyle);
-        }
-        tplStyles.forEach((tplStyle) => {
-          if (cached.new) {
-            classList.forEach((className) => {
-              let from = '.' + className;
-              let to = '.' + proptectClassName(className);
-              let cases = [' ', ':', '{', '['];
-              cases.forEach((cStr) => {
-                tplStyle.innerHTML = tplStyle.innerHTML.split(from + cStr).join(to + cStr);
-              });
-            });
-            documentStyle.innerHTML += tplStyle.innerHTML;
-            cached.new = false;
-          }
-          tplStyle.remove();
-        });
-      }
+      // if (tplStyles.length) {
+      //   if (!documentStyle) {
+      //     documentStyle = document.querySelector('style');
+      //   }
+      //   if (!documentStyle) {
+      //     documentStyle = document.createElement('style');
+      //     document.head.appendChild(documentStyle);
+      //   }
+      //   tplStyles.forEach((tplStyle) => {
+      //     if (cached.new) {
+      //       classList.forEach((className) => {
+      //         let from = '.' + className;
+      //         let to = '.' + proptectClassName(className);
+      //         let cases = [' ', ':', '{', '['];
+      //         cases.forEach((cStr) => {
+      //           tplStyle.innerHTML = tplStyle.innerHTML.split(from + cStr).join(to + cStr);
+      //         });
+      //       });
+      //       documentStyle.innerHTML += tplStyle.innerHTML;
+      //       cached.new = false;
+      //     }
+      //     tplStyle.remove();
+      //   });
+      // }
 
       let defaultSlot = fr.querySelector(`slot:not([name])`);
       let slot;
@@ -124,6 +124,11 @@ export class ReHtm extends HTMLElement {
       ReHtm.processed.push(this);
       if (ReHtm.instances.length === ReHtm.processed.length) {
         window.dispatchEvent(new CustomEvent(IMPORTS_READY));
+        window.requestAnimationFrame(() => {
+          [...document.querySelectorAll('[re-move]')].forEach((el) => {
+            el.remove();
+          });
+        });
       }
     }
     importHtml();
