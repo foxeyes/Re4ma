@@ -1,8 +1,8 @@
 const IMPORTS_READY = 'imports-ready';
 
-// let documentStyle = null;
-
 const CACHE = Object.create(null);
+
+const ATTR_PRFX = '--';
 
 function uid() {
   let allSymbolsStr = '1234567890QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm';
@@ -42,15 +42,15 @@ export class ReHtm extends HTMLElement {
       if (!cached.uid) {
         cached.uid = uid();
       }
-      // let proptectClassName = (name) => {
-      //   return name + '_' + cached.uid;
-      // };
       if (!cached.html) {
         cached.html = await (await window.fetch(src)).text();
       };
       let html = cached.html;
       [...this.attributes].forEach((attr) => {
-        html = html.split(`--${attr.name}--`).join(attr.value);
+        if (attr.name.startsWith(ATTR_PRFX)) {
+          let name = attr.name.replace(ATTR_PRFX, '');
+          html = html.split(`{{${name}}}`).join(attr.value);
+        }
       });
       let tpl = document.createElement('template');
       tpl.innerHTML = html;
@@ -64,42 +64,6 @@ export class ReHtm extends HTMLElement {
         });
         head.remove();
       }
-      // let classList = [];
-      // TODO: use re-class
-      // let styledElArr = [...fr.querySelectorAll('[class]')];
-      // styledElArr.forEach((el) => {
-      //   classList = [...classList, ...el.classList];
-      //   [...el.classList].forEach((className) => {
-      //     el.classList.replace(className, proptectClassName(className));
-      //   });
-      // });
-      // let tplStyles = [...fr.querySelectorAll('style')];
-
-      // if (tplStyles.length) {
-      //   if (!documentStyle) {
-      //     documentStyle = document.querySelector('style');
-      //   }
-      //   if (!documentStyle) {
-      //     documentStyle = document.createElement('style');
-      //     document.head.appendChild(documentStyle);
-      //   }
-      //   tplStyles.forEach((tplStyle) => {
-      //     if (cached.new) {
-      //       classList.forEach((className) => {
-      //         let from = '.' + className;
-      //         let to = '.' + proptectClassName(className);
-      //         let cases = [' ', ':', '{', '['];
-      //         cases.forEach((cStr) => {
-      //           tplStyle.innerHTML = tplStyle.innerHTML.split(from + cStr).join(to + cStr);
-      //         });
-      //       });
-      //       documentStyle.innerHTML += tplStyle.innerHTML;
-      //       cached.new = false;
-      //     }
-      //     tplStyle.remove();
-      //   });
-      // }
-
       let defaultSlot = fr.querySelector(`slot:not([name])`);
       let slot;
       [...this.children].forEach((el) => {

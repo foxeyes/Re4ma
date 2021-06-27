@@ -1,4 +1,4 @@
-export class ReScript extends HTMLElement {
+export class ReJs extends HTMLElement {
   set src(src) {
     let script = document.createElement('script');
     script.src = src;
@@ -16,5 +16,5 @@ export class ReScript extends HTMLElement {
     this[name] = newVal;
   }
 }
-ReScript.observedAttributes = ['src', 'module'];
-window.customElements.define('re-script', ReScript);
+ReJs.observedAttributes = ['src', 'module'];
+window.customElements.define('re-js', ReJs);
