@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "test",
-    "build": "node --experimental-modules builder.mjs"
+    "build": "node builder.js"
   },
   "author": "alex.sova@pm.me",
   "license": "ISC",
