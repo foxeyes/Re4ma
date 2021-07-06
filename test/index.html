@@ -4,12 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Re4ma Test</title>
+  <link rel="stylesheet" href="css/common.css">
 </head>
 <body>
-  <re-htm src="styles/css.htm"></re-htm>
-  <re-htm src="chunks/page.htm" prop="My Prop">
+  <re-htm src="htm/page.htm">
+    <h3>Markdown render example:</h3>
     <re-md src="md/test.md"></re-md>
+    <h3>Optimized image example:</h3>
+    <re-img 
+      src="img/test.jpg"
+      lazy
+      alt="My photo"
+      h="300px"
+      ctx-name="image">
+    </re-img>
+    <h3>JSON example:</h3>
+    <re-json ctx-name="image"></re-json>
   </re-htm>
-  <script src="../render/render.js" type="module" remove></script>
+  <script src="../render/render.js" type="module" re-move></script>
 </body>
 </html>
