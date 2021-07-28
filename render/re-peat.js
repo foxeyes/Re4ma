@@ -20,13 +20,14 @@ export class RePeat extends HTMLElement {
         if (obj[key].constructor === Object) {
           process(obj[key], path + key + '.');
         } else {
-          tpl = tpl.replaceAll(`{{${path + key}}}`, obj[key]);
+          // .replaceAll() - not working in Puppeteer 0_0
+          tpl = tpl.split(`{{${path + key}}}`).join(obj[key]);
         }
       }
     };
     process(dataItem, '');
     if (id) {
-      tpl = tpl.replaceAll('{{id}}', id);
+      tpl = tpl.split('{{id}}').join(id);
     }
     return tpl;
   }
